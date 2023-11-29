@@ -2,23 +2,36 @@ package com.example.sistemainscripcionasignaturas.Entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Entity
-@Data
 @Table(name = "notas")
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class Nota {
-    private int ano;
+@NoArgsConstructor
+@IdClass(Nota.class)
+public class Nota implements Serializable {
+
+    @Id
+    private int anio;
+
     @Id
     private int semestre;
-    private int nota;
+
     @Id
     private Long asignatura;
+
     @Id
     private Long estudiante;
+
+    private int nota;
+
+    // Constructor, getters y setters
 }
+
