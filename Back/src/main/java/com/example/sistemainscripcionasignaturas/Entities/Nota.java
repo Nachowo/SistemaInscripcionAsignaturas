@@ -28,9 +28,9 @@ public class Nota implements Serializable {
     private Long asignatura;
 
     @Id
-    private Long estudiante;
+    private String estudiante;
 
-    private int nota;
+    private float nota;
 
     // Constructor, getters y setters
 }
