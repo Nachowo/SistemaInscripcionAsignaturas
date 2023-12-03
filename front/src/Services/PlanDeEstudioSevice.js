@@ -16,7 +16,9 @@ const errorHandler = (err) => {
 const planService = axios.create({
     baseURL: API_URL,
 });
-
+planService.interceptors.request.use((config) => {
+    return config;
+}, errorHandler);
 planService.interceptors.response.use(undefined, errorHandler);
 class planDeEstudioService {
 
