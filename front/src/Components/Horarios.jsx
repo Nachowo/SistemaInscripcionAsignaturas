@@ -28,7 +28,10 @@ const Horarios = () => {
       codigoAsignatura,
       horarioElegido
     );
+    await sleep(100);
     setProgreso(100);
+    await sleep(500);
+
     setCargando(false);
       Swal.fire({
         title: '¡Horario Subido!',
@@ -48,7 +51,7 @@ const Horarios = () => {
     setProgreso(10);
     await sleep(1000);
     let asign = await PlanDeEstudioSevice.getAsignaturas(asignatura);
-    setProgreso(30);
+    
     await sleep(1000);
 
     if (asign === null) {
@@ -56,6 +59,7 @@ const Horarios = () => {
       setCargando(false);
       alert("Asignatura no encontrada");
     } else {
+      setProgreso(30);
       await sleep(1000);
       setProgreso(70);
       const dataFormateada = formatAsignaturaData(asign.data);
@@ -64,7 +68,9 @@ const Horarios = () => {
       setAsignaturaData(dataFormateada);
 
       setHorarioEncontrado(true);
+      
       setProgreso(100);
+      await sleep(500);
       setCargando(false);
     }
   };
@@ -254,8 +260,9 @@ const Horarios = () => {
             </div>
           </div>
         )}
+                <h4 style={{ textAlign: "center", marginTop: "10px", paddingTop:"20px"  }}>Ingrese el codigo de la asignatura y luego seleccione los bloques en los que se realizará la asignatura </h4>
+
         <section className="portfolio-block contact">
-          <section className="portfolio-block skills">
             <div className="container">
               <div className="row">
                 <div
@@ -341,7 +348,6 @@ const Horarios = () => {
                 </div>
               </div>
             </div>
-          </section>
         </section>
       </main>
       <footer className="page-footer py-3 border-top">

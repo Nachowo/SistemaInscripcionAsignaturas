@@ -24,6 +24,10 @@ class planDeEstudioService {
 
     async getAsignaturas(asignatura) {
         console.log("Asignatura: " + asignatura);
+        if(asignatura === undefined || asignatura === null || asignatura === "")
+        {
+            return null;
+        }
         const res = await planService.get('/asignatura/'+asignatura);
         if(res.status === 200){
             return res;
