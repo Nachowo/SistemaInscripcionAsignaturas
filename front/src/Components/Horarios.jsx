@@ -1,10 +1,62 @@
 import React, { useState } from 'react';
+import PlanDeEstudioSevice from '../Services/PlanDeEstudioSevice';
 
 const Horarios = () => {
-  const [horariosSeleccionados, setHorariosSeleccionados] = useState({});
+  const [horariosSeleccionados, setHorariosSeleccionados] = useState([]);
+  let asignatura = '';
+  let [codigoAsignatura, setCodigoAsignatura] = useState('');
+  const [asignaturaData, setAsignaturaData] = useState({});
+  const [horarioEncontrado, setHorarioEncontrado] = useState(false);
+  const [horarioElegido, setHorarioElegido] = useState([]);
+
+  const handleAsignatura = e => {
+    asignatura = e.target.value;
+  };
+
+  const submitHorario = async () => {
+    console.log(horarioElegido);
+    console.log("en submit horario: " + codigoAsignatura)
+    const response = await PlanDeEstudioSevice.pasarHorario(codigoAsignatura, horarioElegido);
+    }
+  
+  const buscarAsignatura = async () => {
+    let asign = await PlanDeEstudioSevice.getAsignaturas(asignatura);
+    if (asign === null) {
+      alert('Asignatura no encontrada');
+    }
+    else {
+      const dataFormateada = formatAsignaturaData(asign.data);
+      setAsignaturaData(dataFormateada);
+      setHorarioEncontrado(true);
+      
+    }
+  };
+
+  const formatAsignaturaData = (asignData) => {
+    const { planDeEstudioId, nivel, nombreAsignatura, carrera, asignatura } = asignData;
+    console.log(asignatura);
+    setCodigoAsignatura(asignatura);
+    return <div>
+      <br></br>
+      <p>Nombre de Asignatura: {nombreAsignatura}</p>
+    <p>Carrera: {carrera}</p>
+    <p>Plan de Estudio: {planDeEstudioId}</p>
+    <p>Nivel: {nivel}</p>
+    
+  </div>
+  };
+
 
   const handleSeleccion = (hora, dia) => {
+    if(!horarioElegido.includes(hora+dia)){
+      horarioElegido.push(hora+dia);
+    }else{
+      let indice = horarioElegido.indexOf(hora+dia);
+      horarioElegido.splice(indice,1);
+    }
+
     const horarioExistente = horariosSeleccionados[hora];
+    
 
     if (horarioExistente && horarioExistente[dia]) {
       const nuevosHorarios = { ...horariosSeleccionados };
@@ -15,12 +67,12 @@ const Horarios = () => {
 
       setHorariosSeleccionados(nuevosHorarios);
     } else {
-      // Si no existe, seleccionar
       setHorariosSeleccionados(prevHorarios => ({
         ...prevHorarios,
         [hora]: { ...(prevHorarios[hora] || {}), [dia]: { hora, dia } },
       }));
     }
+    console.log(horarioElegido);
   };
 
   const isHorarioSeleccionado = (hora, dia) => {
@@ -39,45 +91,45 @@ const Horarios = () => {
           <td>{i}:00 - {i + 2}:00</td>
           <td>
             <button
-              className={`btn ${isHorarioSeleccionado(i, 'lunes') ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isHorarioSeleccionado(i, 'l') ? 'btn-danger' : 'btn-primary'}`}
               type="button"
-              onClick={() => handleSeleccion(i, 'lunes')}
+              onClick={() => handleSeleccion(i, 'l')}
             >
               Seleccionar
             </button>
           </td>
           <td>
             <button
-              className={`btn ${isHorarioSeleccionado(i, 'martes') ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isHorarioSeleccionado(i, 'm') ? 'btn-warning' : 'btn-primary'}`}
               type="button"
-              onClick={() => handleSeleccion(i, 'martes')}
+              onClick={() => handleSeleccion(i, 'm')}
             >
               Seleccionar
             </button>
           </td>
           <td>
             <button
-              className={`btn ${isHorarioSeleccionado(i, 'miércoles') ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isHorarioSeleccionado(i, 'w') ? 'btn-dark' : 'btn-primary'}`}
               type="button"
-              onClick={() => handleSeleccion(i, 'miércoles')}
+              onClick={() => handleSeleccion(i, 'w')}
             >
               Seleccionar
             </button>
           </td>
           <td>
             <button
-              className={`btn ${isHorarioSeleccionado(i, 'jueves') ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isHorarioSeleccionado(i, 'j') ? 'btn-success' : 'btn-primary'}`}
               type="button"
-              onClick={() => handleSeleccion(i, 'jueves')}
+              onClick={() => handleSeleccion(i, 'j')}
             >
               Seleccionar
             </button>
           </td>
           <td>
             <button
-              className={`btn ${isHorarioSeleccionado(i, 'viernes') ? 'btn-secondary' : 'btn-primary'}`}
+              className={`btn ${isHorarioSeleccionado(i, 'v') ? 'btn-secondary' : 'btn-primary'}`}
               type="button"
-              onClick={() => handleSeleccion(i, 'viernes')}
+              onClick={() => handleSeleccion(i, 'v')}
             >
               Seleccionar
             </button>
@@ -99,20 +151,17 @@ const Horarios = () => {
   };
   return (
     <>
-      <head>
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
-        <title>Contact - Brand</title>
         <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css" />
         <link rel="stylesheet" href="assets/css/Lato.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css" />
         <link rel="stylesheet" href="assets/css/pikaday.min.css" />
-      </head>
-      <body>
+      
         <nav className="navbar navbar-expand-lg fixed-top portfolio-navbar gradient navbar-dark">
           <div className="container">
-            <a className="navbar-brand logo" href="#">
-              Brand
+            <a className="navbar-brand logo" href="/">
+              Sistema de gestión de ramos
             </a>
             <button data-bs-toggle="collapse" className="navbar-toggler" data-bs-target="#navbarNav">
               <span className="visually-hidden">Toggle navigation</span>
@@ -133,47 +182,35 @@ const Horarios = () => {
           <section className="portfolio-block contact">
             <section className="portfolio-block skills">
               <div className="container">
-                <div className="heading"></div>
                 <div className="row">
-                  <div className="col-md-4" style={{ width: '300px', height: '600px', paddingRight: '0px', paddingLeft: '0px' }}>
-                    <form
-                      className="shadow-lg pe-xl-5"
-                      data-bs-theme="light"
-                      style={{
-                        margin: '0px',
-                        marginRight: '0px',
-                        height: '250px',
-                        width: '300px',
-                        paddingRight: '50px',
-                        paddingLeft: '50px',
-                        textShadow: '0px 0px var(--bs-body-bg)',
-                      }}
-                    >
+                  <div className="col-md-4" style={{ width: '300px', height: '600px', paddingRight: '20px', paddingLeft: '0px' }}>
+                  <div style={{ marginRight: '20px' }}>
                       <div className="mb-3">
-                        <label className="form-label" htmlFor="name">
+                        <label className="form-label" htmlFor="asignatura">
                           Asignatura
                         </label>
-                        <input className="form-control item" type="text" id="name" />
+                        <input className="form-control item" type="text" id="asignatura" placeholder='Ingrese el código de la asignatura ej: ' onChange={handleAsignatura}/>
                       </div>
                       <div className="mb-3"></div>
                       <div className="mb-3"></div>
                       <div className="mb-3"></div>
                       <div className="mb-3 mt-4">
-                        <button className="btn btn-primary btn-lg d-block w-100" type="submit">
-                          Submit Form
+                        <button className="btn btn-primary btn-lg d-block w-100" onClick={buscarAsignatura}>
+                          Buscar asignatura
                         </button>
                       </div>
-                    </form>
                     <div className="card special-skill-item border-0"></div>
-                    <h3 style={{ textAlign: 'left' }}>Website Project</h3>
-                    <p style={{ textAlign: 'left' }}>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eget velit ultricies, feugiat est sed,
-                      efr nunc, vivamus vel accumsan dui. Quisque ac dolor cursus, volutpat nisl vel, porttitor eros.
-                    </p>
+                   
+                    { horarioEncontrado ? (<div>  <h3 style={{ textAlign: 'left' }}>Datos de la asignatura</h3>
+                    
+                  
+        {asignaturaData}
+                     </div>): null}
                   </div>
-                  <div className="col" style={{ width: '600px', paddingRight: '5px', paddingLeft: '5px' }}>
+                  </div>
+                  <div className="col" style={{ width: '600px', paddingRight: '5px', paddingLeft: 'px' }}>
                     <div className="table-responsive" style={{ width: '100%' }}>
-                    <table className="table">
+                    {horarioEncontrado ? (<table className="table">
           <thead>
             <tr>
               <th>Horario</th>
@@ -185,12 +222,19 @@ const Horarios = () => {
             </tr>
           </thead>
           <tbody>{renderHoras()}</tbody>
-        </table>
+        </table >): null}
+        <br></br>
                     </div>
+                    {horarioEncontrado ? (<button className="btn btn-primary btn-lg d-block w-100" onClick={submitHorario}>
+                          Guardar horario
+                        </button>): null}
                   </div>
+                  
                 </div>
               </div>
+              
             </section>
+            
           </section>
         </main>
         <footer className="page-footer py-3 border-top">
@@ -211,12 +255,12 @@ const Horarios = () => {
                 <i className="icon ion-social-twitter"></i>
               </a>
             </div>
+            
           </div>
         </footer>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script src="assets/js/pikaday.min.js"></script>
         <script src="assets/js/theme.js"></script>
-      </body>
     </>
   );
 };

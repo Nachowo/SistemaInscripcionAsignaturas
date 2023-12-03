@@ -1,6 +1,5 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../Styles/styles.css';  // Importa tus estilos personalizados después de Bootstrap
 
 
 

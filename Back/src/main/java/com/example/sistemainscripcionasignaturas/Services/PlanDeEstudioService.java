@@ -20,5 +20,10 @@ public class PlanDeEstudioService {
         System.out.println(horario);
     }
 
+    public void guardarHorario(String horario, Long asignatura){
+        PlanDeEstudio plan = planRepo.findByAsignatura(asignatura);
+        plan.setHorarios(horario);
+        planRepo.save(plan);
+    }
 
 }
