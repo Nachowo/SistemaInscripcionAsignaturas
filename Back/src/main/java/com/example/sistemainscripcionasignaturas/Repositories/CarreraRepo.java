@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CarreraRepo extends CrudRepository<Carrera, Long> {
+
+    Carrera findCarreraBycarrera(Long id);
 }

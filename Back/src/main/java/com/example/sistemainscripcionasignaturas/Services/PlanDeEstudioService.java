@@ -5,6 +5,8 @@ import com.example.sistemainscripcionasignaturas.Repositories.PlanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PlanDeEstudioService {
 
@@ -25,5 +27,10 @@ public class PlanDeEstudioService {
         plan.setHorarios(horario);
         planRepo.save(plan);
     }
+
+    public List<PlanDeEstudio> getMalla(Long carrera) {
+        return planRepo.findAllByCarrera(carrera);
+    }
+
 
 }

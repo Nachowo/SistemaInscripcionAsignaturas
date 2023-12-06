@@ -16,4 +16,8 @@ public class Carrera {
     private String nombre;
     @Id
     private Long carrera;
+
+    public String getNombre() {
+        return nombre;
+    }
 }

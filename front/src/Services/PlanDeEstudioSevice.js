@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const API_URL = 'http://192.168.1.13:8090/planDeEstudio';
+//const API_URL = 'http://localhost:8090/planDeEstudio';
 
 const errorHandler = (err) => {
     if(err.request){
@@ -43,6 +44,30 @@ class planDeEstudioService {
             return res;
         }
         return null;
+    }
+
+    async getMalla(carrera){
+        try{
+            const res = await planService.get('/carrera/'+carrera);
+            if(res.status === 200){
+                return res;
+            }
+            return null;
+        }catch(err){
+            return null;
+        }
+    }
+
+    async getCarrera(carrera){
+        try{
+            const res = await planService.get('/nombreCarrera/'+carrera);
+            if(res.status === 200){
+                return res;
+            }
+            return null;
+        }catch(err){
+            return null;
+        }
     }
     
 }

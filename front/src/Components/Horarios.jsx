@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import PlanDeEstudioSevice from "../Services/PlanDeEstudioSevice";
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
+import EstudianteService from "../Services/EstudianteService";
 
 
 const Horarios = () => {
@@ -46,19 +47,17 @@ const Horarios = () => {
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
+  const prueba = async () => {
+      EstudianteService.getEstudiante("E-14322");
+
+  }
   const buscarAsignatura = async () => {
     setCargando(true);
     setProgreso(10);
-    await sleep(1000);
-    let asign = await PlanDeEstudioSevice.getAsignaturas(asignatura);
-    
-    await sleep(1000);
-
-    if (asign === null) {
-      setProgreso(100);
-      setCargando(false);
-      alert("Asignatura no encontrada");
-    } else {
+    await sleep(500);
+    try{
+      let asign = await PlanDeEstudioSevice.getAsignaturas(asignatura);
+      await sleep(500);
       setProgreso(30);
       await sleep(1000);
       setProgreso(70);
@@ -72,6 +71,10 @@ const Horarios = () => {
       setProgreso(100);
       await sleep(500);
       setCargando(false);
+    }catch{
+      setProgreso(100);
+      setCargando(false);
+      alert("Asignatura no encontrada");
     }
   };
 
@@ -281,7 +284,7 @@ const Horarios = () => {
                       </label>
                       <input
                         className="form-control item"
-                        type="text"
+                        type="number"
                         id="asignatura"
                         placeholder="Ingrese el código de la asignatura ej: "
                         onChange={handleAsignatura}
@@ -296,6 +299,12 @@ const Horarios = () => {
                         onClick={buscarAsignatura}
                       >
                         Buscar asignatura
+                      </button>
+                      <button
+                        className="btn btn-primary btn-lg d-block w-100"
+                        onClick={prueba}
+                      >
+                        Boton de prueba
                       </button>
                     </div>
                     <div className="card special-skill-item border-0"></div>

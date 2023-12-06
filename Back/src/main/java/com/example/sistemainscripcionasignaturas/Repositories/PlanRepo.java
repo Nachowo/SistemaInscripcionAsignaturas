@@ -8,6 +8,8 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface PlanRepo extends JpaRepository<PlanDeEstudio,Long> {
     //PlanDeEstudio findByAsignatura(Long asignatura);
@@ -16,6 +18,5 @@ public interface PlanRepo extends JpaRepository<PlanDeEstudio,Long> {
     PlanDeEstudio findByAsignatura(@Param("asignaturaId") Long asignaturaId);
 
 
-
-
+    List<PlanDeEstudio> findAllByCarrera(Long carrera);
 }

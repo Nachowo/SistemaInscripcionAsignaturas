@@ -1,0 +1,11 @@
+/* Agrega estos estilos al archivo de estilos */
+.ramo-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .ramo-container:hover {
+    transform: scale(1.2);
+  }
+  
