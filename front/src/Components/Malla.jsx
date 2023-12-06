@@ -4,6 +4,8 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import EstudianteService from "../Services/EstudianteService";
 import "./styles.css";
+import RequisitosService from "../Services/RequisitosService";
+
 const Malla = () => {
   let alumnoRut = "";
   const [rut, setRut] = useState("");
@@ -13,6 +15,8 @@ const Malla = () => {
   const [cargando, setCargando] = useState(false);
   const [progreso, setProgreso] = useState(0);
   const [nombreCarrera, setNombreCarrera] = useState("");
+  const [pre, setPre] = useState("");
+  const [post, setPost] = useState("");
 
   const handleAlumno = (e) => {
     alumnoRut = e.target.value;
@@ -46,6 +50,8 @@ const Malla = () => {
       setProgreso(100);
       await sleep(500);
       setCargando(false);
+     
+      
     } catch {
       setProgreso(100);
       setCargando(false);
@@ -58,22 +64,44 @@ const Malla = () => {
     return
     }
 
-  const ventana = (ramo) => {
-    return () => {
-      Swal.fire({
-        title: ramo.nombreAsignatura,
-        html: `<p>Nombre: ${ramo.nombreAsignatura}</p>
-        <p>Codigo: ${ramo.codigoAsignatura}</p>
-        <p>Requisitos: ${ramo.requisitos}</p>
-        <p>Horas: ${ramo.horas}</p>
-        <p>Créditos: ${ramo.creditos}</p>
-        <p>Descripción: ${ramo.descripcion}</p>
-        <p>Área: ${ramo.area}</p>
-        <p>Preferencia: ${ramo.preferencia}</p>
-        <p>Sección: ${ramo.seccion}</p>
-        <p>Profesor: ${ramo.profesor}</p>
-        <p>Horario: ${ramo.horario}</p>`})}};
-
+    const ventana = (ramo) => {
+      return () => {
+        Swal.fire({
+          title: ramo.nombreAsignatura,
+          html: `
+            <p>Codigo: ${ramo.asignatura}</p>
+            <p>Requisitos: ${pre.data}</p>
+            <p>Requisitos: ${post.data}</p>
+            <p>Plan de estudio: ${ramo.planDeEstudioId}</p>
+            <p>Horario: ${ramo.horarios}</p>`,
+          showCloseButton: true,
+          showConfirmButton: false,
+          customClass: {
+            closeButton: 'mi-boton',
+          },
+          showCancelButton: true, 
+          cancelButtonText: 'Cerrar', 
+          cancelButtonClass: 'mi-boton', 
+          focusCancel: true, 
+          showConfirmButton: true, 
+          confirmButtonText: 'Inscribir Ramo', 
+          confirmButtonClass: 'mi-boton-inscribir', 
+        }).then((result) => {
+          if (result.isConfirmed) {
+            
+            inscribirRamo(ramo);
+          }
+        });
+      };
+    };
+    
+    const inscribirRamo = (ramo) => {
+      ramo.color = "#66FF66";
+      console.log(`Inscribiendo ramo: ${ramo.nombreAsignatura}`);
+      setMalla([...malla]);
+    };
+    
+    
 const getCarrera = async (carrera) => {
     try {
         const res = await PlanDeEstudioSevice.getCarrera(carrera);
@@ -232,7 +260,7 @@ const getCarrera = async (carrera) => {
                                 .map((ramo, index) => (
                                     <div
                                     className={`ramo-container`}
-                                    style={{ backgroundColor: "#FFFF99" }}
+                                    style={{ backgroundColor: ramo.color || "#FFFF99" }}
                                       onClick={ventana(ramo)}
                                     >
                                       {ramo.nombreAsignatura}
